@@ -5,18 +5,18 @@ interface Link {
 export const NAVLINKS: Link[] = [
   {
     text: "HOME",
-    href: "/",
+    href: "#",
   },
   {
-    text: "ARCHITECTURE",
-    href: "/architecture",
+    text: "MOON BASE",
+    href: "#moon-base",
   },
   {
     text: "PHASES",
-    href: "/phases",
+    href: "#phases",
   },
   {
     text: "MARS-FORWARD",
-    href: "/mars",
+    href: "#mars",
   },
 ];

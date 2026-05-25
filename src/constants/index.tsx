@@ -1,3 +1,4 @@
+// Navbar section
 interface Link {
   text: string;
   href: string;
@@ -29,7 +30,6 @@ export interface PhaseStat {
   icon: React.ReactNode;
   text: string;
 }
-
 export interface Phase {
   id: string | number;
   imageSrc: string;
@@ -38,8 +38,6 @@ export interface Phase {
   bullets: string[];
   stats: PhaseStat[];
 }
-
-// 2. Create your array of phases
 export const PHASES_LIST: Phase[] = [
   {
     id: 1,

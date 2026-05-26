@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface Meteor {
   id: number;
@@ -12,17 +12,10 @@ interface Meteor {
 const Meteors = () => {
   const [meteors, setMeteors] = useState<Meteor[]>([]);
 
-  useEffect(() => {
-    generateMeteors();
-
-    const handleResize = () => {
-      generateMeteors();
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  // Use a ref to store the last known width of the screen
+  const lastWidth = useRef<number>(
+    typeof window !== "undefined" ? window.innerWidth : 0,
+  );
 
   const generateMeteors = () => {
     const newMeteors = [];
@@ -41,8 +34,25 @@ const Meteors = () => {
     setMeteors(newMeteors);
   };
 
+  useEffect(() => {
+    generateMeteors();
+
+    const handleResize = () => {
+      const currentWidth = window.innerWidth;
+
+      // ONLY regenerate if the horizontal width actually changed
+      if (currentWidth !== lastWidth.current) {
+        lastWidth.current = currentWidth; // Update our tracking ref
+        generateMeteors();
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
-    <div className="static inset-0 overflow-hidden pointer-events-none z-10">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
       {meteors.map((meteor) => (
         <div
           key={meteor.id}

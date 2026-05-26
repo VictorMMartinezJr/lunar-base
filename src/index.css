@@ -1,48 +1,119 @@
+@import url("https://fonts.googleapis.com/css2?family=Expletus+Sans:ital,wght@0,400..700;1,400..700&family=Orbitron:wght@400..900&display=swap");
 @import "tailwindcss";
 
+@theme {
+  --font-orbitron: "Orbitron", sans-serif;
+  --font-expletus: "Expletus Sans", sans-serif;
+  --breakpoint-xs: 375px;
+  --animate-meteor: meteor 5s linear infinite 3s;
+}
+
+/* Meteor animations */
+@keyframes meteor {
+  0% {
+    transform: rotate(215deg) translateX(0);
+    opacity: 0;
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: rotate(215deg) translateX(-500px);
+    opacity: 0;
+  }
+}
+
+/* Nav links hover  animation */
+@keyframes float1 {
+  0%,
+  100% {
+    transform: translate(0px, 0px);
+  }
+  33% {
+    transform: translate(3px, -2px);
+  }
+  66% {
+    transform: translate(-2px, 2px);
+  }
+}
+@keyframes float2 {
+  0%,
+  100% {
+    transform: translate(0px, 0px);
+  }
+  50% {
+    transform: translate(-4px, -3px);
+  }
+}
+@keyframes float3 {
+  0%,
+  100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(2px, -4px) scale(0.7);
+    opacity: 0.5;
+  }
+}
+@keyframes float4 {
+  0%,
+  100% {
+    transform: translate(0px, 0px) scale(0.6);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translate(-3px, 3px) scale(1.1);
+    opacity: 1;
+  }
+}
+
+:root {
+  background-color: black;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
 @layer utilities {
-  /* Nav links hover star animation */
-  @keyframes float1 {
-    0%,
-    100% {
-      transform: translate(0px, 0px);
-    }
-    33% {
-      transform: translate(3px, -2px);
-    }
-    66% {
-      transform: translate(-2px, 2px);
-    }
+  .flex-center {
+    @apply flex justify-center items-center;
   }
-  @keyframes float2 {
-    0%,
-    100% {
-      transform: translate(0px, 0px);
-    }
-    50% {
-      transform: translate(-4px, -3px);
-    }
+  .col-center {
+    @apply flex flex-col justify-center items-center;
   }
-  @keyframes float3 {
-    0%,
-    100% {
-      transform: translate(0px, 0px) scale(1);
-      opacity: 1;
-    }
-    50% {
-      transform: translate(2px, -4px) scale(0.7);
-      opacity: 0.5;
-    }
+}
+
+@layer components {
+  .meteor {
+    @apply absolute bg-linear-to-r from-white via-white to-transparent rounded-full;
+    box-shadow: 0 0 10px 5px rgba(255, 255, 255, 0.3);
   }
-  @keyframes float4 {
-    0%,
-    100% {
-      transform: translate(0px, 0px) scale(0.6);
-      opacity: 0.4;
+
+  .hero {
+    h1 {
+      @apply relative font-bold z-20 text-2xl xs:text-3xl -translate-y-40 md:-translate-y-70;
     }
-    50% {
-      transform: translate(-3px, 3px) scale(1.1);
-      opacity: 1;
+
+    h2 {
+      @apply absolute z-20 font-bold text-8xl xs:text-9xl sm:text-[200px] md:text-[250px] xl:text-[400px] 2xl:text-[550px] text-shadow-md text-shadow-white;
+    }
+
+    .orbs {
+      .orb {
+        @apply z-5 absolute w-20 h-20 bg-linear-to-tr from-white to-gray-500 rounded-full blur-3xl;
+
+        &.orb-1 {
+          @apply -right-5 top-50 lg:top-90;
+        }
+
+        &.orb-2 {
+          @apply -left-5 bottom-40;
+        }
+
+        &.orb-3 {
+          @apply right-50 top-20;
+        }
+      }
     }
   }
 }

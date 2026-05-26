@@ -18,7 +18,7 @@ const Meteors = () => {
   const generateMeteors = () => {
     const newMeteors = [];
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       newMeteors.push({
         id: i,
         size: Math.random() * 2 + 1,
@@ -37,7 +37,7 @@ const Meteors = () => {
       {meteors.map((meteor) => (
         <div
           key={meteor.id}
-          className="meteor animate-meteor"
+          className="meteor animate-meteor opacity-0"
           style={{
             width: meteor.size * 50 + "px",
             height: meteor.size * 2 + "px",

@@ -18,7 +18,7 @@ const Meteors = () => {
   const generateMeteors = () => {
     const newMeteors = [];
 
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 3; i++) {
       newMeteors.push({
         id: i,
         size: Math.random() * 2 + 1,

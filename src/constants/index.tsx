@@ -6,7 +6,7 @@ interface Link {
 export const NAVLINKS: Link[] = [
   {
     text: "HOME",
-    href: "#",
+    href: "#home",
   },
   {
     text: "MOON BASE",

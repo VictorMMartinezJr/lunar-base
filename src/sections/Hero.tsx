@@ -2,8 +2,11 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import Meteors from "../components/Meteors";
+import { useState } from "react";
 
 const Hero = () => {
+  const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
+
   useGSAP(() => {
     const nasaSplit = SplitText.create(".nasa-title", {
       type: "chars, words",
@@ -17,7 +20,8 @@ const Hero = () => {
       ease: "power2.inOut",
     });
 
-    tl.from(moonSplit.chars, { opacity: 0, y: 20, stagger: 0.02 })
+    tl.to(".hero__video--2", { opacity: 1 })
+      .from(moonSplit.chars, { opacity: 0, y: 20, stagger: 0.02 })
       .from(".hero-img", { opacity: 0 })
       .from(nasaSplit.chars, {
         opacity: 0,
@@ -30,7 +34,10 @@ const Hero = () => {
   });
 
   return (
-    <section className="hero relative overflow-hidden h-dvh col-center text-center text-white">
+    <section
+      id="home"
+      className="hero relative overflow-hidden h-dvh col-center text-center text-white"
+    >
       <Meteors />
       <h1 className="moon-title">The Return To The Moon</h1>
 
@@ -53,7 +60,19 @@ const Hero = () => {
         autoPlay
         muted
         playsInline
-        className="absolute w-full h-full inset-0 object-cover z-0"
+        preload="auto"
+        poster="assets/images/hero-poster.png"
+        onCanPlayThrough={() => setIsVideoLoaded(true)}
+        className="hero__video--1 absolute w-full h-full inset-0 object-cover z-0"
+      />
+      <video
+        src="/assets/videos/hero1.mp4"
+        autoPlay
+        muted
+        playsInline
+        preload="auto"
+        poster="assets/images/hero-poster.png"
+        className="hero__video--2 absolute w-full h-full inset-0 object-cover z-0 opacity-0"
       />
     </section>
   );

@@ -60,14 +60,14 @@ const PhasesSlider = () => {
                 {phase.title}
               </h2>
 
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:text-lg text-lg xl:text-xl 2xl:text-2xl">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:text-lg text-lg xl:text-xl">
                 <ul className="flex flex-col justify-between gap-2">
                   {phase.bullets.map((b, i) => (
                     <li key={i}>{`- ${b}`}</li>
                   ))}
                 </ul>
 
-                <ul className="grid grid-cols-1 gap-2 md:place-items-center xl:text-xl 2xl:text-2xl">
+                <ul className="grid grid-cols-1 gap-2 md:place-items-center xl:text-xl">
                   {phase.stats.map((stat, i) => (
                     <li
                       key={i}

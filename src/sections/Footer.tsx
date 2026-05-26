@@ -1,4 +1,10 @@
+import { useMediaQuery } from "react-responsive";
+
 const Footer = () => {
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
+
   return (
     <footer className="footer-section relative col-center after:content-[''] after:absolute after:left-0 after:bg-black after:z-30 after:w-[110%] after:h-10 after:-top-5 after:blur-lg">
       <h2
@@ -13,16 +19,23 @@ const Footer = () => {
         NASA
       </h2>
 
-      <video
-        src="assets/videos/moving-stars.mp4"
-        autoPlay
-        playsInline
-        muted
-        loop
-        preload="auto"
-        poster="assets/images/stars-poster.png"
-        className="absolute w-full h-full inset-0 object-cover pointer-events-none z-0"
-      />
+      {isMobile ? (
+        <img
+          src="assets/images/stars-poster.png"
+          className="absolute w-full h-full inset-0 object-cover pointer-events-none z-0"
+        />
+      ) : (
+        <video
+          src="assets/videos/moving-stars.mp4"
+          autoPlay
+          playsInline
+          muted
+          loop
+          preload="auto"
+          poster="assets/images/stars-poster.png"
+          className="absolute w-full h-full inset-0 object-cover pointer-events-none z-0"
+        />
+      )}
 
       {/* Social media icons row. */}
       <div className="flex-center gap-5 relative z-10 my-5">

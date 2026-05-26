@@ -116,4 +116,52 @@
       }
     }
   }
+
+  .moon-base-section {
+    @apply min-h-dvh relative before:absolute before:left-0 before:bg-black before:z-30 before:w-[110%] before:h-20 before:-top-5 before:blur-md after:content-[''] after:absolute after:left-0 after:bg-black after:z-30 after:w-[110%] after:h-20 after:-bottom-5 after:blur-md;
+
+    .moon-base__firsttitle {
+      @apply rotate-3 relative z-10;
+    }
+
+    .moon-base__secondtitle {
+      @apply -rotate-1;
+    }
+
+    .moon-base__thirdtitle {
+      @apply rotate-1 relative z-10;
+    }
+  }
+
+  .general-title {
+    @apply text-3xl sm:text-5xl xl:text-7xl font-bold;
+  }
+
+  .flavor-section {
+    @apply min-h-dvh h-full w-full;
+
+    .flavor-text-scroll {
+      @apply rotate-[-3deg] md:translate-y-5 absolute z-10;
+    }
+
+    .first-text-split h1 {
+      @apply md:text-center;
+    }
+
+    .second-text-split h1 {
+      @apply md:text-center;
+    }
+
+    .slider-wrapper {
+      @apply min-h-dvh w-full mt-0;
+
+      .flavors {
+        @apply h-full w-full grid grid-cols-1 md:grid-cols-2 items-center 2xl:gap-72 lg:gap-24 gap-10 flex-nowrap;
+        /* 
+      h2 {
+        @apply absolute text-white md:bottom-10 md:left-10 bottom-5 left-5 md:text-6xl text-3xl font-semibold tracking-tighter;
+      } */
+      }
+    }
+  }
 }

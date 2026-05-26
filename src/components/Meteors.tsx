@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 
+interface Meteor {
+  id: number;
+  size: number;
+  x: number;
+  y: number;
+  delay: number;
+  animationDuration: number;
+}
+
 const Meteors = () => {
-  const [meteors, setMeteors] = useState([]);
+  const [meteors, setMeteors] = useState<Meteor[]>([]);
 
   useEffect(() => {
     generateMeteors();
@@ -43,7 +52,7 @@ const Meteors = () => {
             height: meteor.size * 2 + "px",
             left: meteor.x + "%",
             top: meteor.y + "%",
-            animationDelay: meteor.delay,
+            animationDelay: meteor.delay + "s",
             animationDuration: meteor.animationDuration + "s",
           }}
         />

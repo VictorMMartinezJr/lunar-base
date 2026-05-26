@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { NAVLINKS } from "../constants";
-import { StarHoverLink } from "./StarHoverLink";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [activeSection, setActiveSection] = useState<string>("#home");
 
+  // Intersection Observer to update active section on scroll
   useEffect(() => {
     const observerOptions = {
       root: null,
@@ -62,16 +62,15 @@ const Navbar = () => {
           <ul className="hidden gap-6 overflow-hidden lg:flex">
             {NAVLINKS.map((link, i: number) => (
               <li key={i}>
-                <StarHoverLink
+                <a
                   href={link.href}
-                  isActive={activeSection === link.href}
                   onClick={() => {
                     setActiveSection(link.href);
                   }}
-                  className={i !== 0 ? "border-l-2 border-neutral-300/20" : ""}
+                  className={`${i !== 0 && "border-l-2 pl-2"} ${activeSection === link.href && "border-b-4 border-b-white}"}`}
                 >
                   {link.text}
-                </StarHoverLink>
+                </a>
               </li>
             ))}
           </ul>

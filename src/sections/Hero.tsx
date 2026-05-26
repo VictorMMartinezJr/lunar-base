@@ -3,8 +3,13 @@ import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import Meteors from "../components/Meteors";
 import { useState } from "react";
+import { useMediaQuery } from "react-responsive";
 
 const Hero = () => {
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
+
   const [, setIsVideoLoaded] = useState<boolean>(false);
 
   useGSAP(() => {
@@ -31,7 +36,12 @@ const Hero = () => {
       .from(".orb-1", { opacity: 0 }, "<")
       .from(".orb-2", { opacity: 0 }, "<")
       .from(".orb-3", { opacity: 0 }, "<");
-  });
+
+    return () => {
+      nasaSplit.revert();
+      moonSplit.revert();
+    };
+  }, [isMobile]);
 
   return (
     <section
@@ -40,7 +50,6 @@ const Hero = () => {
     >
       <Meteors />
       <h1 className="moon-title font-michroma">The Return To The Moon</h1>
-
       <h2
         className="nasa-title font-inter"
         style={{
@@ -52,13 +61,14 @@ const Hero = () => {
       >
         NASA
       </h2>
-
       {/* Bg orbs */}
-      <div className="orbs">
-        <div className="orb orb-1"></div>
-        <div className="orb orb-2"></div>
-        <div className="orb orb-3"></div>
-      </div>
+      {!isMobile && (
+        <div className="orbs">
+          <div className="orb orb-1"></div>
+          <div className="orb orb-2"></div>
+          <div className="orb orb-3"></div>
+        </div>
+      )}
       {/* Video */}
       <img
         src="/assets/images/hero.png"
@@ -75,16 +85,24 @@ const Hero = () => {
         onCanPlayThrough={() => setIsVideoLoaded(true)}
         className="hero__video--1 absolute w-full h-full inset-0 object-cover z-0"
       />
-      <video
-        src="/assets/videos/moving-stars.mp4"
-        autoPlay
-        muted
-        playsInline
-        loop
-        preload="auto"
-        poster="assets/images/stars-poster.png"
-        className="hero__video--2 absolute w-full h-full inset-0 object-cover z-0 opacity-0"
-      />
+      )
+      {isMobile ? (
+        <img
+          src="/assets/images/stars-poster.png"
+          className="absolute w-full h-full inset-0 object-cover z-0 opacity-0"
+        />
+      ) : (
+        <video
+          src="/assets/videos/moving-stars.mp4"
+          autoPlay
+          muted
+          playsInline
+          loop
+          preload="auto"
+          poster="assets/images/stars-poster.png"
+          className="hero__video--2 absolute w-full h-full inset-0 object-cover z-0 opacity-0"
+        />
+      )}
     </section>
   );
 };

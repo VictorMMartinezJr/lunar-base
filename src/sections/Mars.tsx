@@ -3,66 +3,84 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-// Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
 const Mars = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  useGSAP(() => {
-    const video = videoRef.current;
-    const container = containerRef.current;
-    if (!video || !containerRef.current) return;
+  useGSAP(
+    () => {
+      const video = videoRef.current;
+      const container = containerRef.current;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: container,
-        start: "top top",
-        end: "top+=1500 top",
-        scrub: true,
-        pin: true,
-      },
-    });
+      if (video == null || container == null) return;
 
-    videoRef.current.onloadedmetadata = () => {
-      tl.to(videoRef.current, {
-        currentTime: videoRef.current.duration,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "top+=1500 top",
+          scrub: true,
+          pin: true,
+          invalidateOnRefresh: true, // Recalculates on mobile for resize/address bar shifts
+        },
       });
-    };
 
-    gsap.to(".mars-section p ", {
-      opacity: 1,
-      ease: "power2.inOut",
-      scrollTrigger: {
-        trigger: container,
-        start: "top top",
-        end: "bottom 90%",
-        scrub: true,
-      },
-    });
-    gsap.to(".mars-section-h1-1", {
-      opacity: 1,
-      ease: "none",
-      scrollTrigger: {
-        trigger: container,
-        start: "top top",
-        end: "bottom 50%",
-        scrub: true,
-      },
-    });
-    gsap.to(".mars-section-h1-2", {
-      opacity: 1,
-      scale: 1,
-      ease: "power2.inOut",
-      scrollTrigger: {
-        trigger: container,
-        start: "top top",
-        end: "top+=1500 top",
-        scrub: true,
-      },
-    });
-  });
+      const setupVideoAnimation = () => {
+        tl.to(video, {
+          currentTime: video.duration,
+          ease: "none",
+        });
+
+        // Tell ScrollTrigger to recalculate heights now that video metadata is ready
+        ScrollTrigger.refresh();
+      };
+
+      // Handle metadata loading safely
+      if (video.readyState >= 1) {
+        setupVideoAnimation();
+      } else {
+        video.onloadedmetadata = setupVideoAnimation;
+      }
+
+      // Text Animations
+      gsap.to(".mars-section p ", {
+        opacity: 1,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "bottom 90%",
+          scrub: true,
+        },
+      });
+
+      gsap.to(".mars-section-h1-1", {
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "bottom 50%",
+          scrub: true,
+        },
+      });
+
+      gsap.to(".mars-section-h1-2", {
+        opacity: 1,
+        scale: 1,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "top+=1500 top",
+          scrub: true,
+        },
+      });
+    },
+    { scope: containerRef },
+  );
 
   return (
     <section
@@ -70,7 +88,6 @@ const Mars = () => {
       ref={containerRef}
       className="mars-section relative w-full h-dvh overflow-hidden"
     >
-      {/* LAYER 1: THE BACKGROUND VIDEO */}
       <div className="absolute inset-0 w-full h-full">
         {/* Dark Overlay */}
         <div className="absolute inset-0 w-full h-full bg-black/40 z-10 pointer-events-none"></div>
@@ -79,6 +96,7 @@ const Mars = () => {
           src="/assets/videos/mars_scannable.mp4"
           playsInline
           muted
+          autoPlay
           preload="auto"
           className="w-full h-full object-cover"
         ></video>

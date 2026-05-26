@@ -1,25 +1,55 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { NAVLINKS } from "../constants";
 import { StarHoverLink } from "./StarHoverLink";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState<string>("/");
+  const [activeSection, setActiveSection] = useState<string>("#home");
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -60% 0px",
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(`#${entry.target.id}`);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(
+      observerCallback,
+      observerOptions,
+    );
+
+    NAVLINKS.forEach((link) => {
+      if (link.href.startsWith("#") && link.href !== "#") {
+        const targetId = link.href.replace("#", "");
+        const element = document.getElementById(targetId);
+        if (element) observer.observe(element);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   const toggleMobileMenu = (
     e:
       | React.MouseEvent<HTMLButtonElement>
       | React.MouseEvent<HTMLAnchorElement>,
   ) => {
-    e.preventDefault();
     setIsMobileMenuOpen((prev) => !prev);
   };
 
   return (
     <header>
       <nav className="fixed w-full top-0 left-0 text-white flex flex-col justify-between items-center z-50 p-3 md:p-9">
-        <div className="flex w-full items-center justify-between overflow-y-hidden p-4 backdrop-blur-lg lg:m-2 lg:rounded-full lg:shadow-lg">
+        <div className="flex w-full items-center justify-between overflow-y-hidden p-4 lg:m-2">
           {/* NaSA logo */}
           <img
             src="/assets/images/NASA-logo.png"
@@ -35,8 +65,7 @@ const Navbar = () => {
                 <StarHoverLink
                   href={link.href}
                   isActive={activeSection === link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
+                  onClick={() => {
                     setActiveSection(link.href);
                   }}
                   className={i !== 0 ? "border-l-2 border-neutral-300/20" : ""}

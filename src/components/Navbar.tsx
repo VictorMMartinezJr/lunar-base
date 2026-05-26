@@ -39,7 +39,7 @@ const Navbar = () => {
   }, []);
 
   const toggleMobileMenu = (
-    e:
+    _e:
       | React.MouseEvent<HTMLButtonElement>
       | React.MouseEvent<HTMLAnchorElement>,
   ) => {

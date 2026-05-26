@@ -33,7 +33,7 @@ const Meteors = () => {
   };
 
   return (
-    <div className="static border-2 border-red-500 inset-0 overflow-hidden pointer-events-none z-10">
+    <div className="static inset-0 overflow-hidden pointer-events-none z-10">
       {meteors.map((meteor) => (
         <div
           key={meteor.id}

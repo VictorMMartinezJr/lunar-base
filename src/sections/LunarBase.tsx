@@ -1,8 +1,12 @@
 import { useGSAP } from "@gsap/react";
 import ClipPathTitle from "../components/ClipPathTitle";
 import gsap from "gsap";
+import { useMediaQuery } from "react-responsive";
 
 const LunarBase = () => {
+  const isMobile = useMediaQuery({
+    query: "(max-width: 768px)",
+  });
   useGSAP(() => {
     const revealTl = gsap.timeline({
       delay: 1,
@@ -66,14 +70,22 @@ const LunarBase = () => {
           </div>
         </div>
       </div>
-      <video
-        src="/assets/videos/moon-base.mp4"
-        autoPlay
-        muted
-        playsInline
-        loop
-        className="absolute w-full h-full inset-0 object-cover z-0"
-      />
+
+      {isMobile ? (
+        <img
+          src="/assets/images/moon-base.jpg"
+          className="absolute w-full h-full inset-0 object-cover z-0"
+        />
+      ) : (
+        <video
+          src="/assets/videos/moon-base.mp4"
+          autoPlay
+          muted
+          playsInline
+          loop
+          className="absolute w-full h-full inset-0 object-cover z-0"
+        />
+      )}
     </section>
   );
 };

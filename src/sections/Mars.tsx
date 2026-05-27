@@ -134,8 +134,7 @@ const Mars = () => {
             style={{
               filter: `
                 drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */
-                drop-shadow(0 0 30px rgba(239, 68, 68, 0.5)) /* Far outer glow */ `,
+                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */`,
             }}
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -148,8 +147,7 @@ const Mars = () => {
             style={{
               filter: `
                 drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */
-                drop-shadow(0 0 30px rgba(239, 68, 68, 0.5)) /* Far outer glow */ `,
+                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */ `,
             }}
             initial={{ scale: 0, opacity: 0, y: 10 }}
             whileInView={{ scale: 1, opacity: 1, y: 0 }}
@@ -168,8 +166,7 @@ const Mars = () => {
             style={{
               filter: `
                 drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */
-                drop-shadow(0 0 30px rgba(239, 68, 68, 0.5)) /* Far outer glow */ `,
+                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */ `,
             }}
           >
             FIRST CREWED MARS MISSION:
@@ -179,8 +176,7 @@ const Mars = () => {
             style={{
               filter: `
                 drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */
-                drop-shadow(0 0 30px rgba(239, 68, 68, 0.5)) /* Far outer glow */ `,
+                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */ `,
             }}
           >
             2040s

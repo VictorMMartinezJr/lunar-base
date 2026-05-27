@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { NAVLINKS } from "../constants";
+import { ScrollSmoother } from "gsap/all";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
@@ -38,6 +39,19 @@ const Navbar = () => {
     return () => observer.disconnect();
   }, []);
 
+  const handleScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    targetHref: string,
+  ) => {
+    e.preventDefault();
+    setActiveSection(targetHref);
+
+    const smoother = ScrollSmoother.get();
+    if (smoother) {
+      smoother.scrollTo(targetHref, true);
+    }
+  };
+
   const toggleMobileMenu = (
     _e:
       | React.MouseEvent<HTMLButtonElement>
@@ -64,9 +78,7 @@ const Navbar = () => {
               <li key={i}>
                 <a
                   href={link.href}
-                  onClick={() => {
-                    setActiveSection(link.href);
-                  }}
+                  onClick={(e) => handleScroll(e, link.href)}
                   className={`${i !== 0 && "border-l-2 pl-2"} ${activeSection === link.href && "border-b-4 border-b-white}"}`}
                 >
                   {link.text}
@@ -93,7 +105,10 @@ const Navbar = () => {
               <a
                 href={link.href}
                 className="block p-4 cursor-pointer"
-                onClick={(e) => toggleMobileMenu(e)}
+                onClick={(e) => {
+                  handleScroll(e, link.href);
+                  toggleMobileMenu(e);
+                }}
               >
                 {link.text}
               </a>

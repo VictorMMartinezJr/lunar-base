@@ -112,7 +112,6 @@ const Mars = () => {
             src="/assets/videos/mars_scannable.mp4"
             playsInline
             muted
-            autoPlay
             preload="auto"
             className="w-full h-full object-cover"
           />
@@ -145,7 +144,7 @@ const Mars = () => {
             FIRST CREWED MARS MISSION:
           </motion.h2>
           <motion.h2
-            className="mars-section-h1-2 text-8xl md:text-7xl text-amber-200 font-bold font-orbitron opacity-0"
+            className="mars-section-h1-2 text-6xl md:text-7xl sm:text-8xl text-amber-200 font-bold font-orbitron opacity-0"
             style={{
               filter: `
                 drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */

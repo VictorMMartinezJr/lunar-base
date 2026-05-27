@@ -17,6 +17,10 @@ export const NAVLINKS: Link[] = [
     href: "#phases",
   },
   {
+    text: "GALLERY",
+    href: "#gallery",
+  },
+  {
     text: "MARS-FORWARD",
     href: "#mars",
   },
@@ -98,5 +102,48 @@ export const PHASES_LIST: Phase[] = [
       { icon: <FaTruckMonster />, text: "4 rovers" },
       { icon: <FaWeightHanging />, text: "~ 150,000 kg payload to surface" },
     ],
+  },
+];
+
+export interface GalleryImage {
+  id: string | number;
+  src: string;
+  alt: string;
+}
+export const GALLERY_IMAGES: GalleryImage[] = [
+  {
+    id: 1,
+    src: "/assets/images/gallery/gallery-1.jpeg",
+    alt: "Gallery Image 1",
+  },
+  {
+    id: 2,
+    src: "/assets/images/gallery/gallery-2.jpeg",
+    alt: "Gallery Image 2",
+  },
+  {
+    id: 3,
+    src: "/assets/images/gallery/gallery-3.jpeg",
+    alt: "Gallery Image 3",
+  },
+  {
+    id: 4,
+    src: "/assets/images/gallery/gallery-4.jpeg",
+    alt: "Gallery Image 4",
+  },
+  {
+    id: 5,
+    src: "/assets/images/gallery/gallery-5.jpeg",
+    alt: "Gallery Image 5",
+  },
+  {
+    id: 6,
+    src: "/assets/images/gallery/gallery-6.jpeg",
+    alt: "Gallery Image 6",
+  },
+  {
+    id: 7,
+    src: "/assets/images/gallery/gallery-7.jpeg",
+    alt: "Gallery Image 7",
   },
 ];

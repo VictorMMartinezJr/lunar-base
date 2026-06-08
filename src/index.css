@@ -1,11 +1,25 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Orbitron:wght@400..900&display=swap");
 @import "tailwindcss";
 
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+:root {
+  background-color: black;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+  font-family: "Inter", sans-serif;
+}
+
 @theme {
   --font-orbitron: "Orbitron", sans-serif;
   --font-inter: "Inter", sans-serif;
   --breakpoint-xs: 375px;
   --animate-meteor: meteor 5s linear infinite 3s;
+  --animate-slide-left: slide-left 40s linear infinite;
 }
 
 /* Meteor animations */
@@ -68,11 +82,13 @@
   }
 }
 
-:root {
-  background-color: black;
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-  font-family: "Inter", sans-serif;
+@keyframes slide-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 @layer utilities {

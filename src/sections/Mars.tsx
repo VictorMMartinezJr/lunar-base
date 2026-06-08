@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -7,122 +7,204 @@ import { motion } from "framer-motion";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const TOTAL_FRAMES = 53;
+const FRAME_DIRECTORY = "/assets/images/mars-sequence/";
+const FRAME_BASE_NAME = "ezgif-frame-";
+const FRAME_EXTENSION = ".jpg";
+
 const Mars = () => {
-  const isMobile = useMediaQuery({
-    query: "(max-width: 768px)",
-  });
-
+  const isMobile = useMediaQuery({ query: "(max-width: 768px)" });
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  {
-    !isMobile &&
-      useGSAP(
-        () => {
-          const video = videoRef.current;
-          const container = containerRef.current;
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const [isSequenceReady, setIsSequenceReady] = useState<boolean>(false);
+  const [preloadProgress, setPreloadProgress] = useState<number>(0);
 
-          if (video == null || container == null) return;
+  // Get correct path for each frame based on index, ensuring it's between 1 and TOTAL_FRAMES
+  const formatFramePath = (index: number) => {
+    const safeIndex = Math.max(1, Math.min(TOTAL_FRAMES, Math.round(index)));
+    const paddedIndex = String(safeIndex).padStart(3, "0");
+    return `${FRAME_DIRECTORY}${FRAME_BASE_NAME}${paddedIndex}${FRAME_EXTENSION}`;
+  };
 
-          const tl = gsap.timeline({
-            scrollTrigger: {
-              trigger: container,
-              start: "top top",
-              end: "top+=1500 top",
-              scrub: true,
-              pin: true,
-              invalidateOnRefresh: true, // Recalculates on mobile for resize/address bar shifts
-            },
-          });
+  useEffect(() => {
+    if (isMobile) {
+      setIsSequenceReady(true);
+      return;
+    }
 
-          const setupVideoAnimation = () => {
-            tl.to(video, {
-              currentTime: video.duration,
-              ease: "none",
-            });
+    let loadedCount = 0;
+    const loadedImages: HTMLImageElement[] = [];
 
-            // Tell ScrollTrigger to recalculate heights now that video metadata is ready
-            ScrollTrigger.refresh();
-          };
+    for (let i = 1; i <= TOTAL_FRAMES; i++) {
+      const img = new Image();
+      img.src = formatFramePath(i);
 
-          // Handle metadata loading safely
-          if (video.readyState >= 1) {
-            setupVideoAnimation();
-          } else {
-            video.onloadedmetadata = setupVideoAnimation;
-          }
+      img.onload = () => {
+        loadedCount++;
+        setPreloadProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
 
-          // Text Animations
-          gsap.to(".mars-section p ", {
-            opacity: 1,
-            ease: "power2.inOut",
-            scrollTrigger: {
-              trigger: container,
-              start: "top top",
-              end: "bottom 90%",
-              scrub: true,
-            },
-          });
+        if (loadedCount === TOTAL_FRAMES) {
+          imagesRef.current = loadedImages;
+          setIsSequenceReady(true);
+        }
+      };
 
-          gsap.to(".mars-section-h1-1", {
-            opacity: 1,
-            ease: "none",
-            scrollTrigger: {
-              trigger: container,
-              start: "top top",
-              end: "bottom 50%",
-              scrub: true,
-            },
-          });
+      loadedImages[i] = img;
+    }
+  }, [isMobile]);
 
-          gsap.to(".mars-section-h1-2", {
-            opacity: 1,
-            scale: 1,
-            ease: "power2.inOut",
-            scrollTrigger: {
-              trigger: container,
-              start: "top top",
-              end: "top+=1500 top",
-              scrub: true,
-            },
-          });
+  useGSAP(
+    () => {
+      if (!isSequenceReady || isMobile) return;
+
+      const container = containerRef.current;
+      const canvas = canvasRef.current;
+      if (!container || !canvas) return;
+
+      const context = canvas.getContext("2d");
+      if (!context) return;
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const drawImageToCanvas = (index: number) => {
+        const img = imagesRef.current[index];
+        if (!img) return;
+
+        const canvasRatio = canvas.width / canvas.height;
+        const imgRatio = img.width / img.height;
+        let drawWidth = canvas.width;
+        let drawHeight = canvas.height;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (canvasRatio > imgRatio) {
+          drawHeight = canvas.width / imgRatio;
+          offsetY = (canvas.height - drawHeight) / 2;
+        } else {
+          drawWidth = canvas.height * imgRatio;
+          offsetX = (canvas.width - drawWidth) / 2;
+        }
+
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+      };
+
+      if (imagesRef.current[1]) {
+        imagesRef.current[1].onload = () => drawImageToCanvas(1);
+        drawImageToCanvas(1);
+      }
+
+      const frameObj = { frameIndex: 1 };
+
+      gsap.to(frameObj, {
+        frameIndex: TOTAL_FRAMES,
+        snap: "frameIndex",
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "top+=1500 top",
+          scrub: true,
+          pin: true,
+          invalidateOnRefresh: true,
+          onUpdate: () => {
+            drawImageToCanvas(frameObj.frameIndex);
+          },
         },
-        { scope: containerRef },
-      );
-  }
+      });
+
+      // Text Animations for Desktop
+      gsap.to(".mars-section p", {
+        opacity: 1,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "bottom 90%",
+          scrub: true,
+        },
+      });
+
+      gsap.to(".mars-section-h1-1", {
+        opacity: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "bottom 50%",
+          scrub: true,
+        },
+      });
+
+      gsap.to(".mars-section-h1-2", {
+        opacity: 1,
+        scale: 1,
+        ease: "power2.inOut",
+        scrollTrigger: {
+          trigger: container,
+          start: "top top",
+          end: "top+=1500 top",
+          scrub: true,
+        },
+      });
+
+      const handleResize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawImageToCanvas(frameObj.frameIndex);
+      };
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    },
+    { scope: containerRef, dependencies: [isMobile, isSequenceReady] },
+  );
 
   return (
     <section
       id="mars"
       ref={containerRef}
-      className="mars-section relative w-full h-dvh overflow-hidden"
+      className="mars-section relative w-full h-dvh overflow-hidden bg-black"
     >
+      {/* Mini Inline Loader Screen */}
+      {!isMobile && !isSequenceReady && (
+        <div className="absolute inset-0 bg-black z-50 flex flex-col items-center justify-center gap-2">
+          <p className="text-amber-500 font-orbitron tracking-widest animate-pulse">
+            PREPARING MARS DESCENT
+          </p>
+          <div className="w-32 h-0.5 bg-zinc-800 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-amber-500 transition-all duration-200"
+              style={{ width: `${preloadProgress}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       <div className="absolute inset-0 w-full h-full">
-        {/* Dark Overlay */}
         <div className="absolute inset-0 w-full h-full bg-black/40 z-10 pointer-events-none"></div>
-        {/* Video or Image */}
+
         {isMobile ? (
           <img
             src="/assets/images/mars.jpg"
+            alt="Static view of Mars"
             className="w-full h-full object-cover object-left"
           />
         ) : (
-          <video
-            ref={videoRef}
-            src="/assets/videos/mars_scannable.mp4"
-            playsInline
-            muted
-            preload="auto"
-            className="w-full h-full object-cover"
+          <canvas
+            ref={canvasRef}
+            className="w-full h-full object-cover block"
           />
         )}
       </div>
 
-      {/* Text */}
+      {/* Framer Motion Content for Mobile */}
       {isMobile ? (
         <div className="absolute inset-0 z-20 flex flex-col justify-center items-center text-center px-4 pointer-events-none">
           <motion.p
-            className="text-lg md:text-2xl text-gray-300 mt-4 max-w-2xl opacity-0"
+            className="text-lg md:text-2xl text-gray-300 mt-4 max-w-2xl"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
@@ -130,11 +212,11 @@ const Mars = () => {
             BEYOND THE MOON BASE
           </motion.p>
           <motion.h2
-            className="mars-section-h1-1 text-4xl md:text-7xl text-amber-100 font-bold font-orbitron opacity-0"
+            className="text-4xl md:text-7xl text-amber-100 font-bold font-orbitron"
             style={{
               filter: `
-                drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */`,
+                drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))
+                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7))`,
             }}
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -143,11 +225,11 @@ const Mars = () => {
             FIRST CREWED MARS MISSION:
           </motion.h2>
           <motion.h2
-            className="mars-section-h1-2 text-6xl md:text-7xl sm:text-8xl text-amber-200 font-bold font-orbitron opacity-0"
+            className="text-6xl md:text-7xl sm:text-8xl text-amber-200 font-bold font-orbitron"
             style={{
               filter: `
-                drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */ `,
+                drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))
+                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7))`,
             }}
             initial={{ scale: 0, opacity: 0, y: 10 }}
             whileInView={{ scale: 1, opacity: 1, y: 0 }}
@@ -157,6 +239,7 @@ const Mars = () => {
           </motion.h2>
         </div>
       ) : (
+        // Desktop text controlled by GSAP classes
         <div className="absolute inset-0 z-20 flex flex-col justify-center items-center text-center px-4 pointer-events-none">
           <p className="text-lg md:text-2xl text-gray-300 mt-4 max-w-2xl opacity-0">
             BEYOND THE MOON BASE
@@ -164,9 +247,8 @@ const Mars = () => {
           <h2
             className="mars-section-h1-1 text-4xl md:text-7xl text-amber-100 font-bold font-orbitron opacity-0"
             style={{
-              filter: `
-                drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */ `,
+              filter:
+                "drop-shadow(0 0 5px rgba(239, 68, 68, 0.9)) drop-shadow(0 0 15px rgba(239, 68, 68, 0.7))",
             }}
           >
             FIRST CREWED MARS MISSION:
@@ -174,9 +256,8 @@ const Mars = () => {
           <h2
             className="mars-section-h1-2 text-8xl md:text-7xl text-amber-200 font-bold font-orbitron opacity-0 scale-0"
             style={{
-              filter: `
-                drop-shadow(0 0 5px rgba(239, 68, 68, 0.9))  /* Inner glow */
-                drop-shadow(0 0 15px rgba(239, 68, 68, 0.7)) /* Outer glow  */ `,
+              filter:
+                "drop-shadow(0 0 5px rgba(239, 68, 68, 0.9)) drop-shadow(0 0 15px rgba(239, 68, 68, 0.7))",
             }}
           >
             2040s

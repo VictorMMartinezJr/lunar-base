@@ -6,6 +6,7 @@ import Phases from "./sections/Phases";
 import Mars from "./sections/Mars";
 import Footer from "./sections/Footer";
 import { useGSAP } from "@gsap/react";
+import Gallery from "./sections/Gallery";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -18,13 +19,14 @@ const App = () => {
   });
 
   return (
-    <main>
+    <main className="overflow-x">
       <Navbar />
       <div id="smooth-wrapper">
         <div id="smooth-content">
           <Hero />
           <LunarBase />
           <Phases />
+          <Gallery />
           <Mars />
           <Footer />
         </div>

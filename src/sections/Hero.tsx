@@ -14,7 +14,9 @@ const Hero = () => {
   const [isVideoLoaded, setIsVideoLoaded] = useState<boolean>(false);
   const [isStarsVideoLoaded, setIsStarsVideoLoaded] = useState<boolean>(false);
 
-  const isAppLoading = !isMobile && !isVideoLoaded && !isStarsVideoLoaded;
+  const isAppLoading = isMobile
+    ? !isVideoLoaded
+    : !isVideoLoaded && !isStarsVideoLoaded;
 
   // Disable scrolling based on loading status
   useEffect(() => {

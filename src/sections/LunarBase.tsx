@@ -7,6 +7,7 @@ const LunarBase = () => {
   const isMobile = useMediaQuery({
     query: "(max-width: 768px)",
   });
+
   useGSAP(() => {
     const revealTl = gsap.timeline({
       delay: 1,
@@ -47,7 +48,6 @@ const LunarBase = () => {
       <div className="absolute inset-0 w-full h-full bg-black/50 z-10"></div>
       <div className="container relative z-10">
         <div className="col-center">
-          {/* Benefits List */}
           <div className="font-orbitron col-center text-center z-10">
             <ClipPathTitle
               title={"WE'RE BUILDING A"}
